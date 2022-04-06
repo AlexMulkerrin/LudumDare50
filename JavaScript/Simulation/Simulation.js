@@ -9,77 +9,77 @@ const yieldText = ["ERROR","A flood destroyed the crop!","The crop suffered from
 
 function Simulation() {
 	this.timer = 0;
-	
+
 	this.gameState = gameStateID.newGame;
-	
+
 	this.year = 0;
 	this.month = 0;
 	this.day = 0;
-	
+
 	this.population = 0;
 	this.popIncrease = 0;
 	this.popDecrease = 0;
 	this.totalDeaths = 0;
-	
+
 	this.stored = 0;
 	this.lastHarvest = 0;
 	this.lastLoss = 0;
-	
+
 	this.totalArea = 0;
 	this.lastYield = 0;
-	
+
 	this.landPrice = 0;
-	
+
 	this.isPlagued = false;
 	this.rationLevel = rationID.standard;
 	this.sownArea = 0;
 	this.consumptionRate = 0;
-	
+
 	this.history = [];
-	
+
 	this.width = 0;
 	this.height = 0;
 	this.terrain = [];
-	
+
 	this.newGame();
-	
+
 }
 Simulation.prototype.newGame = function() {
 	this.timer = 0;
-	
+
 	this.gameState = gameStateID.newGame;
-	
+
 	this.year = 0;
 	this.month = 0;
 	this.day = 0;
-	
+
 	this.population = 100;
 	this.popIncrease = 0;
 	this.popDecrease = 0;
 	this.totalDeaths = 0;
-	
+
 	this.stored = 60000; // kilos
 	this.lastHarvest = 0;
 	this.lastLoss = 0;
-	
+
 	this.totalArea = 500; //hectacres
 	this.lastYield = 3; // kilos?
 	this.sownArea = 0;
-	
+
 	this.landPrice = 750;
-	
+
 	this.isPlagued = false;
 	this.rationLevel = rationID.standard;
 	this.consumptionRate = 0.5;
-	
+
 	this.history = [];
 	this.history[this.year] = new HistoryEntry(this);
-	
+
 	this.width = 48;
 	this.height = 40;
 	this.terrain = [];
 	this.generateTerrain();
-	
+
 }
 Simulation.prototype.generateTerrain = function() {
 	for (var i=0; i<this.width; i++) {
@@ -88,11 +88,11 @@ Simulation.prototype.generateTerrain = function() {
 			this.terrain[i][j] = terrainTypeID.unowned;
 		}
 	}
-	
+
 	// urban center
 	var centerX = Math.floor(this.width/2);
 	var centerY = Math.floor(this.height/2);
-	
+
 	for (var i=-1; i<=1; i++) {
 		for (var j=-1; j<=1; j++) {
 			this.terrain[centerX+i][centerY+j] = terrainTypeID.ruin;
@@ -100,12 +100,12 @@ Simulation.prototype.generateTerrain = function() {
 	}
 	this.terrain[centerX][centerY] = terrainTypeID.temple;
 	this.terrain[centerX+1][centerY] = terrainTypeID.residence;
-	
+
 	// river
 	for (var i=0; i<this.height; i++) {
 		this.terrain[centerX+2][i] = terrainTypeID.river;
 	}
-	
+
 	// owned fields
 	this.recalculateFields();
 
@@ -113,14 +113,14 @@ Simulation.prototype.generateTerrain = function() {
 Simulation.prototype.sowFields = function (percent) {
 	// clunky place to do some housekeeping
 	this.popDecrease = 0;
-	
+
 	var amount = Math.floor(this.totalArea*percent/100);
 	this.sownArea = amount;
 	this.stored -= amount*20;
-	
+
 	var centerX = Math.floor(this.width/2);
 	var centerY = Math.floor(this.height/2);
-	
+
 	var approxExtent = Math.ceil(Math.sqrt(this.sownArea))+1;
 	var span = Math.ceil(approxExtent/2);
 	var totalClaimed = 0;
@@ -152,10 +152,10 @@ Simulation.prototype.recalculateFields = function() {
 			}
 		}
 	}
-	
+
 	var centerX = Math.floor(this.width/2);
 	var centerY = Math.floor(this.height/2);
-	
+
 	var approxExtent = Math.ceil(Math.sqrt(this.totalArea+14));
 	var span = Math.ceil(approxExtent/2);
 	var totalClaimed = 0;
@@ -178,7 +178,7 @@ Simulation.prototype.losses = function() {
 		this.stored -= this.lastLoss;
 	} else {
 		this.lastLoss = 0;
-	}	
+	}
 }
 Simulation.prototype.immigration = function() {
 	var chance = Math.floor(Math.random()*6+1);
@@ -192,7 +192,7 @@ Simulation.prototype.harvest = function() {
 	this.lastYield = Math.floor(Math.random()*6+1);
 	this.lastHarvest = this.sownArea*this.lastYield*20;
 	this.stored += this.lastHarvest;
-	
+
 }
 Simulation.prototype.plagueChance = function() {
 	if (Math.random()<0.15) {
@@ -200,11 +200,11 @@ Simulation.prototype.plagueChance = function() {
 		this.population = Math.floor(this.population/2);
 	} else {
 		this.isPlagued = false;
-	}	
+	}
 }
 Simulation.prototype.updateLandPrice = function() {
 	this.landPrice = Math.floor(Math.random()*10+10)*50
-	
+
 }
 
 Simulation.prototype.tradeLand = function(amount) {
@@ -225,7 +225,7 @@ Simulation.prototype.tradeLand = function(amount) {
 
 Simulation.prototype.update = function() {
 	this.timer++;
-	
+
 	if (this.gameState == gameStateID.inGame) {
 		// deplete food stores
 		var consumption = this.rationLevel*this.consumptionRate*this.population;
@@ -235,14 +235,14 @@ Simulation.prototype.update = function() {
 		} else { // starvation!
 			this.stored = 0;
 			//this.rationLevel = rationID.none;
-			
+
 			this.population--;
 			this.popDecrease++;
 			this.totalDeaths++;
 			if (this.population<=0) {
 				this.gameState = gameStateID.gameOver;
 				this.year++;
-				
+
 				this.history[this.year] = new HistoryEntry(this);
 			}
 		}
@@ -253,11 +253,11 @@ Simulation.prototype.update = function() {
 			if (this.population<=0) {
 				this.gameState = gameStateID.gameOver;
 				this.year++;
-				
+
 				this.history[this.year] = new HistoryEntry(this);
 			}
 		}
-		
+
 		// time passes
 		this.day++;
 		if (this.day>=30) {
@@ -266,9 +266,9 @@ Simulation.prototype.update = function() {
 			if (this.month>=12) {
 				this.year++;
 				this.month = 0;
-				
+
 				this.yearEndUpdate();
-				
+
 			}
 		}
 	}
@@ -280,9 +280,9 @@ Simulation.prototype.yearEndUpdate = function() {
 	this.harvest();
 	this.plagueChance();
 	this.updateLandPrice();
-	
+
 	this.history[this.year] = new HistoryEntry(this);
-	
+
 	this.sownArea = 0;
 
 }
@@ -292,17 +292,17 @@ function HistoryEntry(inState) {
 	this.popIncrease = inState.popIncrease;
 	this.popDecrease = inState.popDecrease;
 	this.totalDeaths = inState.totalDeaths;
-	
+
 	this.stored = inState.stored;
 	this.lastHarvest = inState.lastHarvest;
 	this.lastLoss = inState.lastLoss;
-	
+
 	this.totalArea = inState.totalArea;
 	this.lastYield = inState.lastYield;
 	this.sownArea = inState.sownArea;
-	
+
 	this.landPrice = inState.landPrice;
-	
+
 	this.isPlagued = inState.isPlagued;
 	this.rationLevel = inState.rationLevel;
 }

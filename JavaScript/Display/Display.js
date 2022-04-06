@@ -118,7 +118,7 @@ Display.prototype.drawTextBox = function() {
 		}
 		this.ctx.fillText(yieldText[sim.lastYield]+" "+Math.floor(sim.lastHarvest/1000)+" tonnes collected.",100,210);
 	} else if (sim.gameState == gameStateID.endReport) {
-		this.ctx.fillText("Game over: Your city lies in ruins... Your reign lasted "+sim.year+" years."+, 200,20);
+		this.ctx.fillText("Game over: Your city lies in ruins... Your reign lasted "+sim.year+" years.", 200,20);
 	}
 }
 Display.prototype.drawInterface = function() {
