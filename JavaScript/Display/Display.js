@@ -2,6 +2,10 @@ const colourID = {background:"#eeeeff", textWhite:"#ffffff", textBlack:"#000000"
 unowned:"#EADCD1", field:"#B6B99C", plantedField:"#669865", river:"#9FC7EB", temple:"#FF6A00", residence:"#914B2B", ruin:"#696365"
 };
 
+const tileID = {temple:0, residence:1, ruin:2,
+				field:4, plantedField:5, ripeField:6, blightedFielf:7,
+				unowned:8, river:9 };
+
 function Display(inSimulation) {
 	this.targetSimulation = inSimulation;
 	this.targetControl = {};
@@ -12,6 +16,12 @@ function Display(inSimulation) {
 	this.c.height = 640; //window.innerHeight;
 
 	this.sqSize = 16;
+
+	this.loadImages();
+}
+Display.prototype.loadImages = function() {
+	this.tileset = new Image();
+	this.tileset.src = "Resources/Images/Tileset.png";
 }
 Display.prototype.update = function() {
 	this.clearCanvas();
@@ -23,7 +33,7 @@ Display.prototype.clearCanvas = function() {
 }
 Display.prototype.refresh = function() {
 	this.drawTerrain();
-	this.drawRoads();
+	//this.drawRoads();
 
 	this.drawTextBox();
 	this.drawInterface();
@@ -42,34 +52,48 @@ Display.prototype.drawTerrain = function() {
 		for (var j=0; j<sim.height; j++) {
 			switch(sim.terrain[i][j]) {
 				case terrainTypeID.unowned:
-					this.ctx.fillStyle = colourID.unowned;
+					//this.ctx.fillStyle = colourID.unowned;
+					this.drawTile(tileID.unowned,i*this.sqSize, j*this.sqSize);
 					break;
 				case terrainTypeID.field:
-					this.ctx.fillStyle = colourID.field;
+					//this.ctx.fillStyle = colourID.field;
+					this.drawTile(tileID.field,i*this.sqSize, j*this.sqSize);
 					break;
 				case terrainTypeID.plantedField:
-					this.ctx.fillStyle = colourID.plantedField;
+					//this.ctx.fillStyle = colourID.plantedField;
+					this.drawTile(tileID.plantedField,i*this.sqSize, j*this.sqSize);
 					break;
 				case terrainTypeID.river:
-					this.ctx.fillStyle = colourID.river;
+					//this.ctx.fillStyle = colourID.river;
+					this.drawTile(tileID.river,i*this.sqSize, j*this.sqSize);
 					break;
 				case terrainTypeID.temple:
-					this.ctx.fillStyle = colourID.temple;
+					//this.ctx.fillStyle = colourID.temple;
+					this.drawTile(tileID.temple,i*this.sqSize, j*this.sqSize);
 					break;
 				case terrainTypeID.residence:
-					this.ctx.fillStyle = colourID.residence;
+					//this.ctx.fillStyle = colourID.residence;
+					this.drawTile(tileID.residence,i*this.sqSize, j*this.sqSize);
 					break;
 				case terrainTypeID.ruin:
-					this.ctx.fillStyle = colourID.ruin;
+					//this.ctx.fillStyle = colourID.ruin;
+					this.drawTile(tileID.ruin,i*this.sqSize, j*this.sqSize);
 					break;
 
 				default:
 					this.ctx.fillStyle = colourID.unknownTerrain;
+					this.ctx.fillRect(i*this.sqSize, j*this.sqSize, this.sqSize, this.sqSize);
 			}
-			this.ctx.fillRect(i*this.sqSize, j*this.sqSize, this.sqSize, this.sqSize);
+			//this.ctx.fillRect(i*this.sqSize, j*this.sqSize, this.sqSize, this.sqSize);
 
 		}
 	}
+}
+Display.prototype.drawTile = function(id,x,y) {
+	var tx = (id % 4)*16;
+	var ty = Math.floor(id/4)*16;
+	this.ctx.drawImage(	this.tileset,tx,ty,16,16,
+						x,y,this.sqSize,this.sqSize);
 }
 Display.prototype.drawRoads = function() {
 	var sim = this.targetSimulation;
