@@ -1,0 +1,43 @@
+Post compo Ludum Dare plans
+• Tiles
+• Icons
+• Sound effects
+• Random time events
+• Intro screen
+
+• Bustling agents
+• Detailed end screen
+• Improved slider
+• Implement other button functions
+• Animate stats
+
+Improve algorithm for order of assignment of fields. Weigh proximity to water and urban center. Make sure there are unbroken irrigation canals from tile to river.
+Multiple tile designs for unowned land.
+Stages of crop growth including blight and flooded
+Animated tiles for floodwaters and disease clouds.
+Moving agents on roads and river. Route to and from map edges and city center spawned by trade deals and harvest time
+
+Summary is a census so happens after harvest months but before sowing season.
+
+Add effects for high and low ration  levels. Extra immigration or emigration.
+Give ten year goal which can be continued or shared with ratings.
+Impeachement for starving too many people.
+Animate event log with each event moving down screen in a list.
+
+Keyboard controls with more detailed tooltips showing key. 
+All interface buttons have associated sound. Events have sound based on severity.
+
+Population and food depicted as icons that animate on increase or depletion.
+Price to sell/buy land coloured to show whether good or bad deal. Slight change each month with event log alert for big shifts.
+
+Rebalance cost of planting fields so more labourers needed to setup irrigation at start. Allow assignment of labourers to build homes, grain storage or walls.
+Low rations make plague worse. Rats/spoilage reduced by silos which have a limited space. Floods cause damage to city unless there are walls.
+
+Record when disasters happen and mark on end game graph.
+🐀🌊🤢
+Sanity check values for harvests and rebalance amount of land owned.
+Change Algorithm for immigration so plague results in fewer immigrants when it hits. Growth should be faster in good times.
+Starvation should be slower and have a big effect on approval. If approval gets to low have riots leading to loss.
+
+Use linked sliders for labour assignment. Show changes on hover before clicking and add in drag ability.
+Extra info on mouse over of stat icons. Create dummy button element with no click effect.
